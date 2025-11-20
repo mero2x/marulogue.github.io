@@ -1,0 +1,20 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/uploads"
+
+collections:
+  - name: "posts"
+    label: "Posts"
+    folder: "content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Type", name: "type", widget: "select", options: ["photo", "video", "text"], default: "photo"}
+      - {label: "Category", name: "category", widget: "string"}
+      - {label: "Image", name: "image", widget: "image", required: false}
+      - {label: "Video URL", name: "videoUrl", widget: "string", required: false, hint: "YouTube or Vimeo URL"}
+      - {label: "Body", name: "body", widget: "markdown", required: false}
