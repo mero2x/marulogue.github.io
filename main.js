@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function fetchPosts() {
   try {
-    const response = await fetch('/content/posts.json');
+    const response = await fetch('/posts.json');
     if (response.ok) {
       galleryItems = await response.json();
     } else {

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const postsDir = path.join(__dirname, 'content', 'posts');
-const outputFile = path.join(__dirname, 'content', 'posts.json');
+const outputFile = path.join(__dirname, 'posts.json');
 
 // Ensure posts directory exists
 if (!fs.existsSync(postsDir)) {
