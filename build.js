@@ -73,4 +73,12 @@ fs.readdir(postsDir, (err, files) => {
     // Write the aggregated data to posts.json
     fs.writeFileSync(outputFile, JSON.stringify(posts, null, 2));
     console.log(`Successfully aggregated ${posts.length} posts to ${outputFile}`);
+
+    // Copy theme settings to root
+    const themeFile = path.join(__dirname, 'content', 'settings', 'theme.json');
+    const themeOutput = path.join(__dirname, 'theme.json');
+    if (fs.existsSync(themeFile)) {
+        fs.copyFileSync(themeFile, themeOutput);
+        console.log('Theme settings copied to root');
+    }
 });

@@ -21,3 +21,17 @@ collections:
       - {label: "Image", name: "image", widget: "image", required: false}
       - {label: "Video URL", name: "videoUrl", widget: "string", required: false, hint: "YouTube or Vimeo URL"}
       - {label: "Body", name: "body", widget: "markdown", required: false}
+
+  - name: "settings"
+    label: "Settings"
+    files:
+      - name: "theme"
+        label: "Theme Settings"
+        file: "content/settings/theme.json"
+        fields:
+          - {label: "Background Color", name: "bgColor", widget: "color", default: "#fcfcfc"}
+          - {label: "Text Color", name: "textColor", widget: "color", default: "#2c2c2c"}
+          - {label: "Accent Color", name: "accentColor", widget: "color", default: "#e0e0e0"}
+          - {label: "Font", name: "font", widget: "select", options: ["Inter", "Roboto", "Lora", "Playfair Display"], default: "Inter"}
+          - {label: "Sidebar Position", name: "sidebarPosition", widget: "select", options: ["left", "right"], default: "left"}
+          - {label: "Custom CSS", name: "customCss", widget: "code", default: "", required: false}

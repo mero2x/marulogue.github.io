@@ -20,7 +20,56 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   setupNavigation();
+  await applyTheme();
 });
+
+async function applyTheme() {
+  try {
+    const response = await fetch('/theme.json');
+    if (response.ok) {
+      const theme = await response.json();
+      const root = document.documentElement;
+
+      if (theme.bgColor) root.style.setProperty('--bg-color', theme.bgColor);
+      if (theme.textColor) root.style.setProperty('--text-color', theme.textColor);
+      if (theme.accentColor) root.style.setProperty('--accent-color', theme.accentColor);
+
+      if (theme.font) {
+        root.style.setProperty('--font-main', `"${theme.font}", sans-serif`);
+        // Dynamically load font if not already loaded (simplified for common Google Fonts)
+        const fontLink = document.createElement('link');
+        fontLink.href = `https://fonts.googleapis.com/css2?family=${theme.font.replace(' ', '+')}:wght@300;400;500;600&display=swap`;
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+      }
+
+      if (theme.sidebarPosition === 'right') {
+        document.body.classList.add('sidebar-right');
+        // Add CSS for right sidebar dynamically or use a class in style.css
+        const style = document.createElement('style');
+        style.textContent = `
+          .sidebar-right .site-header { left: auto; right: 0; border-right: none; border-left: 1px solid var(--accent-color); }
+          .sidebar-right .main-content { margin-left: 0; margin-right: var(--sidebar-width); }
+          .sidebar-right .site-footer { margin-left: 0; margin-right: var(--sidebar-width); }
+          @media (max-width: 768px) {
+            .sidebar-right .site-header { left: 0; right: auto; }
+            .sidebar-right .main-content { margin-right: 0; }
+            .sidebar-right .site-footer { margin-right: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      if (theme.customCss) {
+        const style = document.createElement('style');
+        style.textContent = theme.customCss;
+        document.head.appendChild(style);
+      }
+    }
+  } catch (e) {
+    console.error('Error applying theme:', e);
+  }
+}
 
 async function fetchPosts() {
   try {
