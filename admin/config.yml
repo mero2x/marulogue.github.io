@@ -31,6 +31,8 @@ collections:
         label: "Theme Settings"
         file: "content/settings/theme.json"
         delete: false
+        format: "json"
+        extension: "json"
         fields:
           - {label: "Background Color", name: "bgColor", widget: "color", default: "#fcfcfc"}
           - {label: "Text Color", name: "textColor", widget: "color", default: "#2c2c2c"}
