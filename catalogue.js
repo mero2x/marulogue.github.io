@@ -92,6 +92,20 @@ async function loadData() {
     }
 }
 
+// Helper function to extract director name from movie credits
+function extractDirector(credits) {
+    if (!credits || !credits.crew) return null;
+    const director = credits.crew.find(person => person.job === 'Director');
+    return director ? director.name : null;
+}
+
+// Helper function to extract creator name from TV show
+function extractCreator(createdBy) {
+    if (!createdBy || !Array.isArray(createdBy) || createdBy.length === 0) return null;
+    // Return the first creator's name
+    return createdBy[0].name;
+}
+
 async function enrichData() {
     console.log('Enriching data...');
     let updated = false;
@@ -117,10 +131,16 @@ async function enrichData() {
                     // Update our local item with the new details
                     if (isMovie) {
                         item.production_countries = data.production_countries;
-                        item.credits = data.credits;
+                        // Extract and store only the director name, not the full credits object
+                        item.director = extractDirector(data.credits);
+                        // Delete the credits object if it exists to save space
+                        delete item.credits;
                     } else {
                         item.origin_country = data.origin_country;
-                        item.created_by = data.created_by;
+                        // Extract and store only the creator name
+                        item.creator = extractCreator(data.created_by);
+                        // Delete the created_by object to save space
+                        delete item.created_by;
                     }
                     updated = true;
                 }
