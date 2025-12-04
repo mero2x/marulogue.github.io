@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Directory - 丸</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css" />
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="top-nav">
+                    <a href="/" aria-label="Home" class="home-link">丸</a>
+                    <a href="/discover.html" aria-label="Directory" class="active"><svg width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                        </svg></a>
+                    <a href="#" aria-label="Inbox"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg></a>
+                </nav>
+                <div class="search-bar">
+                    <input type="text" placeholder="search">
+                </div>
+            </div>
+        </header>
+
+        <div class="layout-container">
+            <main class="main-content">
+                <div class="discover-container fade-in">
+                    <div class="profile-section">
+                        <div class="profile-pic">
+                            <div class="placeholder-avatar">
+                                <img src="https://images.unsplash.com/photo-1452570053594-1b985d6ea890?q=80&w=300&auto=format&fit=crop"
+                                    alt="Bird">
+                            </div>
+                        </div>
+                        <div class="profile-bio">
+                            <h3 class="profile-name">丸</h3>
+                            <p class="bio-text">this is personal catalogue, a marulogue, if you will.<br>it's a work in
+                                progress so pls leave it alone thx</p>
+                        </div>
+                    </div>
+
+                    <div class="divider-line"></div>
+
+                    <div class="discover-links-section">
+                        <div class="link-group">
+                            <span class="link-label">links</span>
+                            <div class="link-items">
+                                <a href="/catalogue.html" class="pill-link">catalogue</a>
+                                <a href="#" class="pill-link">ko-fi</a>
+                                <a href="#" class="pill-link">vsco</a>
+                            </div>
+                        </div>
+
+                        <div class="link-group">
+                            <span class="link-label">tags</span>
+                            <div class="link-items">
+                                <a href="#" class="pill-link">photos</a>
+                                <a href="#" class="pill-link">journal</a>
+                                <a href="#" class="pill-link">misc</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Contentful SDK & Rich Text Renderer -->
+    <script src="https://cdn.jsdelivr.net/npm/contentful@latest/dist/contentful.browser.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@12.0.0/dist/rich-text-html-renderer.min.js"></script>
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>

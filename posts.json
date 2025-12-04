@@ -1,27 +1,65 @@
 [
     {
-        "title": "big blue",
-        "date": "2025-11-20T16:00:00.000Z",
-        "type": "photo",
+        "title": "test photoset",
+        "date": "2025-11-28T09:00:00.000Z",
+        "type": "photoset",
         "category": "Photography",
-        "image": "/assets/uploads/3x.png",
-        "id": "2025-11-20-big-blue"
+        "images": [
+            "/assets/images/test-photo-133134.jpg",
+            "/assets/images/test-photo-133306.jpg",
+            "/assets/images/test-photo-133331.jpg",
+            "/assets/images/test-photo-133355.jpg",
+            "/assets/images/test-photo-133512.jpg"
+        ],
+        "body": "",
+        "id": "2025-11-28-test-photoset"
     },
     {
-        "title": "test",
-        "date": "2025-11-20T16:00:00.000Z",
-        "type": "photo",
-        "category": "Photography",
-        "image": "/assets/uploads/3x.png",
-        "body": "test",
-        "id": "2025-11-20-test"
+        "title": "on quiet moments",
+        "date": "2025-11-28T08:00:00.000Z",
+        "type": "text",
+        "category": "Thoughts",
+        "body": "There's something about the stillness between moments that feels more honest than the moments themselves. Like the pause between breaths, or the silence after a song ends. That's where I find myself lately—in the spaces between.\n\nI've been thinking about how we document our lives. Every photo, every word, trying to capture something fleeting. But maybe the point isn't to hold onto these moments. Maybe it's just to notice them as they pass.",
+        "id": "2025-11-28-quiet-moments"
     },
     {
-        "title": "wtf",
-        "date": "2025-11-20T16:00:00.000Z",
+        "title": "moment two",
+        "date": "2025-11-26T08:00:00.000Z",
+        "type": "photoset",
+        "category": "Photography",
+        "images": [
+            "/assets/images/AA015A.jpg",
+            "/assets/images/AA020A.jpg",
+            "/assets/images/000087140010.jpg"
+        ],
+        "body": "",
+        "id": "2025-11-26-moment-two"
+    },
+    {
+        "title": "moment three",
+        "date": "2025-11-25T08:00:00.000Z",
         "type": "photo",
         "category": "Photography",
-        "image": "/assets/uploads/3x.png",
-        "id": "2025-11-20-wtf"
+        "image": "/assets/images/AA020A.jpg",
+        "body": "",
+        "id": "2025-11-25-moment-three"
+    },
+    {
+        "title": "moment four",
+        "date": "2025-11-24T08:00:00.000Z",
+        "type": "photo",
+        "category": "Photography",
+        "image": "/assets/images/IMG_0326.JPG",
+        "body": "",
+        "id": "2025-11-24-moment-four"
+    },
+    {
+        "title": "moment five",
+        "date": "2025-11-23T08:00:00.000Z",
+        "type": "photo",
+        "category": "Photography",
+        "image": "/assets/images/chewie_3.jpg",
+        "body": "",
+        "id": "2025-11-23-moment-five"
     }
 ]

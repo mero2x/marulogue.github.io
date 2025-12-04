@@ -1,0 +1,289 @@
+[
+    {
+        "id": 278,
+        "title": "The Shawshank Redemption",
+        "poster_path": "/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+        "release_date": "1994-09-23",
+        "rating": 5,
+        "review": "A classic.",
+        "media_type": "movie"
+    },
+    {
+        "id": 1396,
+        "name": "Breaking Bad",
+        "poster_path": "/m9qXTc8EEKkd2mb3QUajlKGr6YQ.jpg",
+        "first_air_date": "2008-01-20",
+        "rating": 5,
+        "review": "Best TV show ever.",
+        "media_type": "tv"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/tmU7GeKVybMWFButWEGl2M4GeiP.jpg",
+        "genre_ids": [
+            18,
+            80
+        ],
+        "id": 238,
+        "original_language": "en",
+        "original_title": "The Godfather",
+        "overview": "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.",
+        "popularity": 25.4639,
+        "poster_path": "/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+        "release_date": "1972-03-14",
+        "title": "The Godfather",
+        "video": false,
+        "vote_average": 8.684,
+        "vote_count": 22108,
+        "media_type": "movie",
+        "rating": 5,
+        "review": "very cool, very dark",
+        "dateWatched": "2025-12-01T10:26:09.292Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/kGzFbGhp99zva6oZODW5atUtnqi.jpg",
+        "genre_ids": [
+            18,
+            80
+        ],
+        "id": 240,
+        "original_language": "en",
+        "original_title": "The Godfather Part II",
+        "overview": "In the continuing saga of the Corleone crime family, a young Vito Corleone grows up in Sicily and in 1910s New York. In the 1950s, Michael Corleone attempts to expand the family business into Las Vegas, Hollywood and Cuba.",
+        "popularity": 18.2049,
+        "poster_path": "/hek3koDUyRQk7FIhPXsa6mT2Zc3.jpg",
+        "release_date": "1974-12-20",
+        "title": "The Godfather Part II",
+        "video": false,
+        "vote_average": 8.57,
+        "vote_count": 13364,
+        "media_type": "movie",
+        "rating": 5,
+        "review": "very cool pt 2",
+        "dateWatched": "2025-12-01T10:26:23.137Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/zNnjHLDtV8Ti3aworltaeaLMov4.jpg",
+        "genre_ids": [
+            80,
+            18,
+            53
+        ],
+        "id": 242,
+        "original_language": "en",
+        "original_title": "The Godfather Part III",
+        "overview": "In the midst of trying to legitimize his business dealings in 1979 New York and Italy, aging mafia don, Michael Corleone seeks forgiveness for his sins while taking a young protege under his wing.",
+        "popularity": 11.637,
+        "poster_path": "/lm3pQ2QoQ16pextRsmnUbG2onES.jpg",
+        "release_date": "1990-12-25",
+        "title": "The Godfather Part III",
+        "video": false,
+        "vote_average": 7.417,
+        "vote_count": 6601,
+        "media_type": "movie",
+        "rating": 3,
+        "review": "not as cool but still good",
+        "dateWatched": "2025-12-01T10:26:32.666Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/8U2ndZrneigI2zkvGuTJtt1ZsxK.jpg",
+        "genre_ids": [
+            35,
+            18
+        ],
+        "id": 4586,
+        "origin_country": [
+            "US"
+        ],
+        "original_language": "en",
+        "original_name": "Gilmore Girls",
+        "overview": "Set in the charming town of Stars Hollow, Connecticut, the series follows the captivating lives of Lorelai and Rory Gilmore, a mother/daughter pair who have a relationship most people only dream of.",
+        "popularity": 33.2813,
+        "poster_path": "/8hWwBpB1mLUKqzjdGrcvJcIklp4.jpg",
+        "first_air_date": "2000-10-05",
+        "name": "Gilmore Girls",
+        "vote_average": 7.898,
+        "vote_count": 1168,
+        "media_type": "tv",
+        "rating": 3,
+        "review": "very cosy",
+        "dateWatched": "2025-12-01T10:26:59.174Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/zt3cmdZr3t0K64gzpwIc4LXiuDu.jpg",
+        "genre_ids": [
+            35,
+            18
+        ],
+        "id": 594,
+        "original_language": "en",
+        "original_title": "The Terminal",
+        "overview": "An Eastern European tourist unexpectedly finds himself stranded in JFK airport, and must take up temporary residence there.",
+        "popularity": 6.1612,
+        "poster_path": "/ahdXDRkyoh3JnPcfPoZCyU0mV3v.jpg",
+        "release_date": "2004-06-17",
+        "title": "The Terminal",
+        "video": false,
+        "vote_average": 7.4,
+        "vote_count": 8381,
+        "media_type": "movie",
+        "rating": 3,
+        "review": "tom hanks is racist",
+        "dateWatched": "2025-12-01T11:28:11.618Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/rrREM1cowfMZ8SmrJ9KCFO3y4j6.jpg",
+        "genre_ids": [
+            10765,
+            18,
+            16
+        ],
+        "id": 204154,
+        "origin_country": [
+            "US"
+        ],
+        "original_language": "en",
+        "original_name": "Scavengers Reign",
+        "overview": "When a deep space freighter is damaged by a solar flare its surviving crew are stranded on a beautiful and unforgiving planet. They begin to learn the true nature of this planet as they try to survive long enough to escape or be rescued.",
+        "popularity": 4.0392,
+        "poster_path": "/soqfb1vpjhx2ThpkdnnS58QiME2.jpg",
+        "first_air_date": "2023-10-19",
+        "name": "Scavengers Reign",
+        "vote_average": 8.516,
+        "vote_count": 338,
+        "media_type": "tv",
+        "rating": 4,
+        "review": "",
+        "dateWatched": "2025-12-01T14:55:01.278Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/2HtnTJLs3CDUTu6ug8rib5vNnU2.jpg",
+        "genre_ids": [
+            16,
+            80,
+            10765,
+            10759
+        ],
+        "id": 43865,
+        "origin_country": [
+            "JP"
+        ],
+        "original_language": "ja",
+        "original_name": "PSYCHO-PASS サイコパス",
+        "overview": "In the year 2113, people are given brain scans to determine how likely they are to commit a crime. Those who fail are apprehended, or even killed.",
+        "popularity": 9.9615,
+        "poster_path": "/6LiPvkdJnqChFtkD9bee6nFdAXK.jpg",
+        "first_air_date": "2012-10-12",
+        "name": "Psycho-Pass",
+        "vote_average": 7.715,
+        "vote_count": 441,
+        "media_type": "tv",
+        "rating": 4,
+        "review": "",
+        "dateWatched": "2025-12-01T14:59:11.944Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/5R7RGEH5Q4fkadWM0e0Vlc97M2m.jpg",
+        "genre_ids": [
+            18,
+            35
+        ],
+        "id": 7030,
+        "origin_country": [
+            "JP"
+        ],
+        "original_language": "ja",
+        "original_name": "花ざかりの君たちへ 〜イケメン♂パラダイス〜",
+        "overview": "Japanese-American track star Mizuki Ashiya transfers from a school in California to Japan, but not to just any old school. The school is Osaka High School—an all male high school! Mizuki Ashiya must disguise herself as a boy, all to get closer to her hero, Izumi Sano, a high-jump athlete who attends Osaka High.\n\nNow with short hair, flattened chest, and deeper voice, Mizuki becomes roommates with Izumi Sano, but trouble soon starts to brew. Izumi Sano discovers by accident that Mizuki is a girl and falls in love with her, but Mizuki is unaware of the fact. Complicating things, fellow classmate Shuichi Nakatsu starts to develop feelings for Mizuki, unaware that she is a girl!",
+        "popularity": 4.0055,
+        "poster_path": "/2pddfXAbAGq2qi6bjpuIBkDx6lo.jpg",
+        "first_air_date": "2007-07-03",
+        "name": "HANA-KIMI",
+        "vote_average": 7.3,
+        "vote_count": 28,
+        "media_type": "tv",
+        "rating": 3,
+        "review": "",
+        "dateWatched": "2025-12-01T15:00:26.205Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/egK8OpGhJdoD3xzdiaQPiGEIyMw.jpg",
+        "genre_ids": [
+            35,
+            53,
+            80,
+            9648
+        ],
+        "id": 15196,
+        "original_language": "en",
+        "original_title": "Clue",
+        "overview": "Clue finds six colorful dinner guests gathered at the mansion of their host, Mr. Boddy -- who turns up dead after his secret is exposed: He was blackmailing all of them. With the killer among them, the guests and Boddy's chatty butler must suss out the culprit before the body count rises.",
+        "popularity": 4.226,
+        "poster_path": "/aRxbYOYHS8T73nzR8hsLousoplR.jpg",
+        "release_date": "1985-12-13",
+        "title": "Clue",
+        "video": false,
+        "vote_average": 7.2,
+        "vote_count": 1863,
+        "media_type": "movie",
+        "rating": 4,
+        "review": "so good",
+        "dateWatched": "2025-12-01T15:01:23.867Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/2tQ0Uhav10ay7jOX6QoqvbtGljB.jpg",
+        "genre_ids": [
+            18,
+            878,
+            12
+        ],
+        "id": 644,
+        "original_language": "en",
+        "original_title": "A.I. Artificial Intelligence",
+        "overview": "David, a robotic boy—the first of his kind programmed to love—is adopted as a test case by a Cybertronics employee and his wife. Though he gradually becomes their child, a series of unexpected circumstances make this life impossible for David.",
+        "popularity": 9.3943,
+        "poster_path": "/8MZSGX5JORoO72EfuAEcejH5yHn.jpg",
+        "release_date": "2001-06-29",
+        "title": "A.I. Artificial Intelligence",
+        "video": false,
+        "vote_average": 7.051,
+        "vote_count": 6458,
+        "media_type": "movie",
+        "rating": 3,
+        "review": "",
+        "dateWatched": "2025-12-01T15:02:08.213Z"
+    },
+    {
+        "adult": false,
+        "backdrop_path": "/zpEWFNqoN8Qg1SzMMHmaGyOBTdW.jpg",
+        "genre_ids": [
+            28,
+            53,
+            80
+        ],
+        "id": 1054867,
+        "original_language": "en",
+        "original_title": "One ASS ter Another",
+        "overview": "Washed-up revolutionary Bob exists in a state of stoned paranoia, surviving off-grid with his spirited, self-reliant daughter, Willa. When his evil nemesis resurfaces after 16 years and she goes missing, the former radical scrambles to find her, father and daughter both battling the consequences of his past.",
+        "popularity": 136.917,
+        "poster_path": "/m1jFoahEbeQXtx4zArT2FKdbNIj.jpg",
+        "release_date": "2025-09-23",
+        "title": "One ASSfter Another",
+        "video": false,
+        "vote_average": 7.491,
+        "vote_count": 1717,
+        "media_type": "movie",
+        "rating": 2,
+        "review": "",
+        "dateWatched": "2025-12-01T19:32:39.873Z"
+    }
+]
