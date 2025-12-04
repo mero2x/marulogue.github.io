@@ -1,0 +1,12 @@
+{
+    "buildCommand": "node build.js",
+    "outputDirectory": ".",
+    "installCommand": "npm install",
+    "framework": null,
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/"
+        }
+    ]
+}

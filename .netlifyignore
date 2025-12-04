@@ -1,7 +1,0 @@
-# Don't deploy these files
-node_modules/
-.env
-server.js
-admin.html
-package.json
-package-lock.json
