@@ -17,6 +17,9 @@ let currentMovieId = null;
 let currentPage = 1;
 const ITEMS_PER_PAGE = 30;
 
+// Temporary storage for rating/review before movie is added
+let pendingEdits = {};
+
 // DOM Elements
 const searchInput = document.getElementById('movie-search-input');
 const searchBtn = document.getElementById('search-btn');
@@ -645,13 +648,19 @@ window.toggleWatched = async function (id) {
         // Add Movie
         const item = searchResults.find(m => m.id === id);
         if (item) {
+            // Get any pending rating/review from the panel
+            const pending = pendingEdits[id] || {};
+
             const newMovie = {
                 ...item,
                 media_type: currentType,
-                rating: 0,
-                review: '',
+                rating: pending.rating || 0,
+                review: pending.review || '',
                 dateWatched: new Date().toISOString()
             };
+
+            // Clear pending edits for this movie
+            delete pendingEdits[id];
 
             // Optimistic update
             watchedMovies.push(newMovie);
@@ -699,7 +708,7 @@ window.rateMovie = async function (id, rating) {
     if (!isAdmin) return;
     const index = watchedMovies.findIndex(m => m.id === id);
     if (index !== -1) {
-        // Optimistic
+        // Movie already in library - update it
         watchedMovies[index].rating = rating;
         openMoviePanel(id); // Re-render panel
 
@@ -712,6 +721,10 @@ window.rateMovie = async function (id, rating) {
         } catch (e) {
             console.error('Rating save failed', e);
         }
+    } else {
+        // Movie not yet added - store in pending edits
+        if (!pendingEdits[id]) pendingEdits[id] = {};
+        pendingEdits[id].rating = rating;
     }
 };
 
@@ -719,6 +732,7 @@ async function saveReview(id, text) {
     if (!isAdmin) return;
     const index = watchedMovies.findIndex(m => m.id === id);
     if (index !== -1) {
+        // Movie already in library - update it
         watchedMovies[index].review = text;
         const status = document.getElementById('save-status');
         if (status) status.textContent = 'Saving...';
@@ -740,6 +754,15 @@ async function saveReview(id, text) {
         } catch (e) {
             console.error('Review save failed', e);
             if (status) status.textContent = 'Error';
+        }
+    } else {
+        // Movie not yet added - store in pending edits
+        if (!pendingEdits[id]) pendingEdits[id] = {};
+        pendingEdits[id].review = text;
+        const status = document.getElementById('save-status');
+        if (status) {
+            status.textContent = 'Will save when you add this to library';
+            setTimeout(() => status.textContent = '', 2000);
         }
     }
 }
