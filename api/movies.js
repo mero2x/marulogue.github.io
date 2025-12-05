@@ -22,13 +22,13 @@ module.exports = async (req, res) => {
         const type = req.query.type || 'movie'; // 'movie' or 'tv'
 
         // Fetch the movie list entry from Contentful
-        const entry = await client.getEntry('4hGCkGl9Ql3bXZuQYvCfJl');
+        const entry = await client.getEntry('movieList');
 
-        if (!entry || !entry.fields || !entry.fields.movieList) {
+        if (!entry || !entry.fields || !entry.fields.contents) {
             return res.status(404).json({ error: 'Movie list not found' });
         }
 
-        let allMovies = entry.fields.movieList;
+        let allMovies = entry.fields.contents;
 
         // Filter by media type
         const filteredMovies = allMovies.filter(item => {
