@@ -36,6 +36,13 @@ module.exports = async (req, res) => {
             return itemType === type;
         });
 
+        // Sort by release date (latest first)
+        filteredMovies.sort((a, b) => {
+            const dateA = new Date(a.release_date || a.first_air_date || 0);
+            const dateB = new Date(b.release_date || b.first_air_date || 0);
+            return dateB - dateA; // Descending order (latest first)
+        });
+
         // Calculate pagination
         const totalItems = filteredMovies.length;
         const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);

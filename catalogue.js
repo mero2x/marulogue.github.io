@@ -737,112 +737,62 @@ function getCountryName(name) {
     return name;
 }
 
-function renderStats() {
+async function renderStats() {
     moviesGrid.innerHTML = '';
     if (paginationContainer) paginationContainer.innerHTML = '';
 
-    // Filter data based on current type (Film/TV)
-    const list = watchedMovies.filter(item => {
-        const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
-        return type === currentType;
-    });
+    // Show loading state
+    moviesGrid.innerHTML = `<div class="empty-state"><p>Loading stats...</p></div>`;
 
-    if (list.length === 0) {
-        moviesGrid.innerHTML = `<div class="empty-state"><p>No watched ${currentType === 'movie' ? 'movies' : 'TV shows'} to analyze.</p></div>`;
-        return;
+    try {
+        // Fetch stats from API
+        const response = await fetch(`/api/stats?type=${currentType}`);
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch stats');
+        }
+
+        const stats = await response.json();
+
+        const personLabel = currentType === 'movie' ? 'Directors' : 'Creators';
+
+        // --- Render HTML ---
+        const statsHtml = `
+            <div class="stats-container fade-in">
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.totalWatched}</div>
+                        <div class="stat-label">${currentType === 'movie' ? 'Films' : 'Shows'} Watched</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.totalCountries}</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${stats.totalDirectors}</div>
+                        <div class="stat-label">${personLabel}</div>
+                    </div>
+                </div>
+
+                <div class="stats-lists">
+                    <div class="list-section">
+                        <h3>Top 10 Countries</h3>
+                        ${renderBarChart(stats.topCountries.map(c => [c.name, c.count]), stats.totalWatched)}
+                    </div>
+                    <div class="list-section">
+                        <h3>Top 10 ${personLabel}</h3>
+                        ${renderBarChart(stats.topDirectors.map(d => [d.name, d.count]), stats.totalWatched)}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        moviesGrid.innerHTML = statsHtml;
+
+    } catch (error) {
+        console.error('Error loading stats:', error);
+        moviesGrid.innerHTML = `<div class="empty-state"><p>Failed to load stats. Please try again.</p></div>`;
     }
-
-    // --- Calculate Stats ---
-
-    // 1. Total Watched
-    const totalWatched = list.length;
-
-    // 2. Countries
-    const countryMap = {};
-    list.forEach(item => {
-        let countries = [];
-        if (item.production_countries && item.production_countries.length > 0) {
-            countries = item.production_countries.map(c => getCountryName(c.name));
-        } else if (item.origin_country && item.origin_country.length > 0) {
-            countries = item.origin_country.map(c => getCountryName(c));
-        }
-
-        countries.forEach(c => {
-            countryMap[c] = (countryMap[c] || 0) + 1;
-        });
-    });
-    const totalCountries = Object.keys(countryMap).length;
-
-    // 3. Directors / Creators
-    const personMap = {};
-    list.forEach(item => {
-        let people = [];
-        if (currentType === 'movie') {
-            // For movies, we need 'director'. 
-            // Note: watchedMovies might not have full credits unless we fetched them.
-            // If we don't have credits, we can't count directors yet.
-            // We'll check if 'credits' or 'director' field exists.
-            if (item.credits && item.credits.crew) {
-                const directors = item.credits.crew.filter(c => c.job === 'Director');
-                people = directors.map(d => d.name);
-            }
-        } else {
-            // For TV, 'created_by'
-            if (item.created_by && item.created_by.length > 0) {
-                people = item.created_by.map(p => p.name);
-            }
-        }
-
-        people.forEach(p => {
-            personMap[p] = (personMap[p] || 0) + 1;
-        });
-    });
-    const totalPeople = Object.keys(personMap).length;
-    const personLabel = currentType === 'movie' ? 'Directors' : 'Creators';
-
-    // --- Generate Top 10 Lists ---
-
-    const topCountries = Object.entries(countryMap)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10);
-
-    const topPeople = Object.entries(personMap)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10);
-
-    // --- Render HTML ---
-
-    const statsHtml = `
-        <div class="stats-container fade-in">
-            <div class="stats-overview">
-                <div class="stat-card">
-                    <div class="stat-number">${totalWatched}</div>
-                    <div class="stat-label">${currentType === 'movie' ? 'Films' : 'Shows'} Watched</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${totalCountries}</div>
-                    <div class="stat-label">Countries</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${totalPeople}</div>
-                    <div class="stat-label">${personLabel}</div>
-                </div>
-            </div>
-
-            <div class="stats-lists">
-                <div class="list-section">
-                    <h3>Top 10 Countries</h3>
-                    ${renderBarChart(topCountries, totalWatched)}
-                </div>
-                <div class="list-section">
-                    <h3>Top 10 ${personLabel}</h3>
-                    ${renderBarChart(topPeople, totalWatched)}
-                </div>
-            </div>
-        </div>
-    `;
-
-    moviesGrid.innerHTML = statsHtml;
 }
 
 function renderBarChart(data, total) {
