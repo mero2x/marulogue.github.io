@@ -379,7 +379,11 @@ function renderMovies() {
     });
 
     console.log(`Rendering page ${paginationMeta.currentPage}: ${list.length} items`);
-    renderPagination(paginationMeta.totalPages, paginationMeta.totalItems);
+
+    // Only show pagination for watched tab (not for admin search results)
+    if (currentTab === 'watched') {
+        renderPagination(paginationMeta.totalPages, paginationMeta.totalItems);
+    }
 }
 
 async function updatePage(newPage) {
