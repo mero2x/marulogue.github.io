@@ -37,15 +37,15 @@ const panelContent = document.getElementById('panel-content');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadData();
-    // enrichData(); // Removed global call to prevent browser crash
-
     // Initialize page from URL
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = parseInt(urlParams.get('page'));
     if (!isNaN(pageParam) && pageParam > 0) {
         currentPage = pageParam;
     }
+
+    // Load data with pagination
+    await loadData(currentPage, currentType);
 
     if (isAdmin) {
         fetchPopular();
@@ -63,32 +63,55 @@ const CONTENTFUL_ACCESS_TOKEN = 'MdfnSyUm-p9jlDCG7HCyUuokTZAhyK7UxuXdKA_vXUo';
 const CONTENTFUL_ENTRY_ID = 'movieList';
 const CONTENTFUL_FIELD_ID = 'contents';
 
-async function loadData() {
-    // 1. Try fetching from Contentful directly
+// Store pagination metadata
+let paginationMeta = {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    hasNextPage: false,
+    hasPrevPage: false
+};
+
+async function loadData(page = 1, type = 'movie') {
     try {
-        const url = `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/master/entries/${CONTENTFUL_ENTRY_ID}?access_token=${CONTENTFUL_ACCESS_TOKEN}`;
-        const response = await fetch(url);
+        // Fetch from serverless API with pagination
+        const apiUrl = `/api/movies?page=${page}&type=${type}`;
+        const response = await fetch(apiUrl);
 
         if (response.ok) {
             const data = await response.json();
-            // Contentful returns the field value. We expect it to be the array of movies.
-            // The structure is usually data.fields[CONTENTFUL_FIELD_ID]
-            if (data.fields && data.fields[CONTENTFUL_FIELD_ID]) {
-                watchedMovies = data.fields[CONTENTFUL_FIELD_ID];
-                console.log('Loaded data from Contentful');
-                return;
-            }
+            watchedMovies = data.movies || [];
+            paginationMeta = data.pagination || paginationMeta;
+            console.log(`Loaded ${watchedMovies.length} movies for page ${page}`);
+            return;
+        } else {
+            console.error('Failed to fetch from API:', response.statusText);
         }
     } catch (error) {
-        console.warn('Failed to fetch from Contentful:', error);
+        console.warn('Failed to fetch from API:', error);
     }
 
-    // 2. Fallback to local JSON file
+    // Fallback: try local file (will load all, but better than nothing)
     try {
         const response = await fetch('./data/ass.json');
         if (response.ok) {
-            watchedMovies = await response.json();
-            console.log('Loaded data from local file');
+            const allMovies = await response.json();
+            // Filter by type
+            const filtered = allMovies.filter(item => {
+                const itemType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+                return itemType === type;
+            });
+            // Manually paginate
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            watchedMovies = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+            paginationMeta = {
+                currentPage: page,
+                totalPages: Math.ceil(filtered.length / ITEMS_PER_PAGE),
+                totalItems: filtered.length,
+                hasNextPage: page < Math.ceil(filtered.length / ITEMS_PER_PAGE),
+                hasPrevPage: page > 1
+            };
+            console.log('Loaded data from local file (fallback)');
         } else {
             console.error('Failed to load local data file');
             watchedMovies = [];
@@ -178,7 +201,7 @@ function setupEventListeners() {
 
     // Type Tabs (Film/TV)
     typeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             if (btn.classList.contains('active')) return;
 
             typeBtns.forEach(b => b.classList.remove('active'));
@@ -192,12 +215,13 @@ function setupEventListeners() {
                 searchResults = [];
                 fetchPopular();
             } else {
-                // In public mode, just re-render to filter by type
+                // In public mode, reload data with new type
                 currentPage = 1;
+                await loadData(1, currentType);
                 if (currentTab === 'stats') {
                     renderStats();
                 } else {
-                    renderMovies();
+                    updatePage(1);
                 }
             }
         });
@@ -335,45 +359,29 @@ function renderMovies() {
 
     let list = currentTab === 'watched' ? watchedMovies : searchResults;
 
-    // Filter by type
-    // In Admin Search, results are already typed. 
-    // In Public Watched/Search, we need to filter.
-    if (currentTab === 'watched' || (!isAdmin && currentTab === 'search')) {
-        list = list.filter(item => {
-            // Check explicit media_type or infer
-            const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
-            return type === currentType;
-        });
-    }
+    // For admin search, list is already filtered by TMDB
+    // For watched tab, list is already filtered by server
+    // No need for client-side filtering when using server pagination
 
     if (list.length === 0) {
         moviesGrid.innerHTML = `<div class="empty-state"><p>No ${currentType === 'movie' ? 'movies' : 'TV shows'} found.</p></div>`;
         return;
     }
 
-    // Pagination
-    const totalItems = list.length;
-    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-    if (currentPage > totalPages) currentPage = 1;
-
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    const paginatedList = list.slice(start, end);
-
-    paginatedList.forEach(item => {
+    // Render all items (server already sent only the page we need)
+    list.forEach(item => {
         const card = createMovieCard(item);
         moviesGrid.appendChild(card);
     });
 
     // Enrich only the visible items to avoid browser crash
-    enrichData(paginatedList);
+    enrichData(list);
 
-    console.log(`Rendering page ${currentPage}: ${paginatedList.length} items`);
-    renderPagination(totalPages, totalItems);
+    console.log(`Rendering page ${paginationMeta.currentPage}: ${list.length} items`);
+    renderPagination(paginationMeta.totalPages, paginationMeta.totalItems);
 }
 
-function updatePage(newPage) {
+async function updatePage(newPage) {
     currentPage = newPage;
 
     // Update URL without reloading
@@ -381,6 +389,8 @@ function updatePage(newPage) {
     url.searchParams.set('page', newPage);
     window.history.pushState({ page: newPage }, '', url);
 
+    // Reload data from server for the new page
+    await loadData(newPage, currentType);
     renderMovies();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
