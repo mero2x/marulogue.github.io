@@ -631,56 +631,114 @@ function closePanel() {
 }
 
 // Global Handlers (Admin Only)
-window.toggleWatched = function (id) {
+window.toggleWatched = async function (id) {
     if (!isAdmin) return;
 
     const index = watchedMovies.findIndex(m => m.id === id);
     if (index === -1) {
-        // Add
+        // Add Movie
         const item = searchResults.find(m => m.id === id);
         if (item) {
-            watchedMovies.push({
+            const newMovie = {
                 ...item,
                 media_type: currentType,
                 rating: 0,
                 review: '',
                 dateWatched: new Date().toISOString()
-            });
+            };
+
+            // Optimistic update
+            watchedMovies.push(newMovie);
+            renderMovies();
+            if (currentMovieId === id) openMoviePanel(id);
+
+            try {
+                const response = await fetch('/api/add-movie', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newMovie)
+                });
+                if (!response.ok) throw new Error('Failed to save to server');
+                console.log('Movie added to server');
+            } catch (e) {
+                console.error('Add failed:', e);
+                alert('Using local backup only. Server save failed.');
+            }
         }
     } else {
-        // Remove
+        // Remove Movie
+        const idToDelete = watchedMovies[index].id;
+
+        // Optimistic update
         watchedMovies.splice(index, 1);
+        renderMovies();
+        if (currentMovieId === id) openMoviePanel(id);
+
+        try {
+            const response = await fetch('/api/delete-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: idToDelete })
+            });
+            if (!response.ok) throw new Error('Failed to delete from server');
+            console.log('Movie deleted from server');
+        } catch (e) {
+            console.error('Delete failed:', e);
+            alert('Server delete failed.');
+        }
     }
-    // No explicit save to localStorage needed if we rely on Export, 
-    // but saving to localStorage is good for persistence during editing session.
-    // We can implement a simple localStorage backup.
-    renderMovies();
-    if (currentMovieId === id) openMoviePanel(id);
 };
 
-window.rateMovie = function (id, rating) {
+window.rateMovie = async function (id, rating) {
     if (!isAdmin) return;
     const index = watchedMovies.findIndex(m => m.id === id);
     if (index !== -1) {
+        // Optimistic
         watchedMovies[index].rating = rating;
-        openMoviePanel(id);
+        openMoviePanel(id); // Re-render panel
+
+        try {
+            await fetch('/api/update-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, updates: { rating } })
+            });
+        } catch (e) {
+            console.error('Rating save failed', e);
+        }
     }
 };
 
-function saveReview(id, text) {
+async function saveReview(id, text) {
     if (!isAdmin) return;
     const index = watchedMovies.findIndex(m => m.id === id);
     if (index !== -1) {
         watchedMovies[index].review = text;
         const status = document.getElementById('save-status');
-        if (status) {
-            status.textContent = 'Saved';
-            setTimeout(() => status.textContent = '', 2000);
+        if (status) status.textContent = 'Saving...';
+
+        try {
+            const response = await fetch('/api/update-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, updates: { review: text } })
+            });
+            if (response.ok) {
+                if (status) {
+                    status.textContent = 'Saved';
+                    setTimeout(() => status.textContent = '', 2000);
+                }
+            } else {
+                if (status) status.textContent = 'Error';
+            }
+        } catch (e) {
+            console.error('Review save failed', e);
+            if (status) status.textContent = 'Error';
         }
     }
 }
 
-window.selectPoster = function (id, posterPath) {
+window.selectPoster = async function (id, posterPath) {
     if (!isAdmin) return;
 
     const index = watchedMovies.findIndex(m => m.id === id);
@@ -690,20 +748,32 @@ window.selectPoster = function (id, posterPath) {
         // Update the main poster image
         const currentPoster = document.getElementById('current-poster');
         if (currentPoster) {
-            currentPoster.src = `${IMAGE_BASE_URL}${posterPath} `;
+            currentPoster.src = `${IMAGE_BASE_URL}${posterPath}`;
         }
 
         // Update selected state
         document.querySelectorAll('.poster-option').forEach(img => {
             img.classList.remove('selected');
         });
-        event.target.classList.add('selected');
+        const target = event.target; // event is global here in inline handler logic
+        if (target) target.classList.add('selected');
+
+        // Save
+        try {
+            await fetch('/api/update-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, updates: { poster_path: posterPath } })
+            });
+        } catch (e) {
+            console.error('Poster save failed', e);
+        }
     }
 };
 
 async function exportData() {
     try {
-        const response = await fetch('http://localhost:3000/api/save-movies', {
+        const response = await fetch('/api/save-movies', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
