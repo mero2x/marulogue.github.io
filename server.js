@@ -200,31 +200,54 @@ app.get('/api/movies', async (req, res) => {
         const entryId = process.env.CONTENTFUL_ENTRY_ID;
         const fieldId = process.env.CONTENTFUL_FIELD_ID;
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = 30;
+        const type = req.query.type || 'movie';
+
         if (!accessToken) {
-            console.warn('No Contentful Access Token provided. Returning empty list.');
-            return res.json([]);
+            console.warn('No Contentful Access Token provided.');
+            return res.json({ movies: [], pagination: {} });
         }
 
-        const url = `https://cdn.contentful.com/spaces/${spaceId}/environments/master/entries/${entryId}?access_token=${accessToken}`;
+        const url = `https://cdn.contentful.com/spaces/${spaceId}/environments/master/entries/${entryId}?access_token=${accessToken}&t=${Date.now()}`; // Add cache buster
 
         const response = await fetch(url);
 
         if (response.ok) {
             const data = await response.json();
-            // CDA returns fields with the default locale (or requested locale) merged
-            const movies = data.fields[fieldId] || [];
-            res.json(movies);
+            const allItems = data.fields[fieldId] || [];
+
+            // Filter
+            const filtered = allItems.filter(item => {
+                const itemType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+                return itemType === type;
+            });
+
+            // Sort (Newest watched first)
+            filtered.sort((a, b) => new Date(b.dateWatched || 0) - new Date(a.dateWatched || 0));
+
+            // Paginate
+            const startIndex = (page - 1) * limit;
+            const endIndex = startIndex + limit;
+            const paginated = filtered.slice(startIndex, endIndex);
+
+            res.json({
+                movies: paginated,
+                pagination: {
+                    currentPage: page,
+                    totalPages: Math.ceil(filtered.length / limit),
+                    totalItems: filtered.length,
+                    hasNextPage: endIndex < filtered.length,
+                    hasPrevPage: page > 1
+                }
+            });
         } else {
-            if (response.status === 404) {
-                console.log('Contentful entry not found. Returning empty list.');
-            } else {
-                console.error('Contentful API error:', response.status, response.statusText);
-            }
-            res.json([]);
+            console.error('Contentful API error:', response.status);
+            res.json({ movies: [], pagination: {} });
         }
     } catch (error) {
         console.error('Error fetching from Contentful:', error);
-        res.json([]);
+        res.json({ movies: [], pagination: {} });
     }
 });
 
