@@ -546,21 +546,24 @@ async function openMoviePanel(id) {
                 </div>
             `;
 
-            if (isWatched) {
-                reviewHtml = `
-                    <div class="panel-section fade-in">
-                        <h3>Rating</h3>
-                        <div class="panel-rating">
-                            ${renderStarRating(id, userRating, true)}
-                        </div>
+            // Always show rating/review in admin mode (use pending edits if not yet added)
+            const pending = pendingEdits[id] || {};
+            const displayRating = isWatched ? userRating : (pending.rating || 0);
+            const displayReview = isWatched ? userReview : (pending.review || '');
+
+            reviewHtml = `
+                <div class="panel-section fade-in">
+                    <h3>Rating</h3>
+                    <div class="panel-rating">
+                        ${renderStarRating(id, displayRating, true)}
                     </div>
-                    <div class="panel-section fade-in">
-                        <h3>Review</h3>
-                        <textarea class="review-input" id="review-input" placeholder="Write your review here...">${userReview}</textarea>
-                        <div class="save-status" id="save-status"></div>
-                    </div>
-                `;
-            }
+                </div>
+                <div class="panel-section fade-in">
+                    <h3>Review</h3>
+                    <textarea class="review-input" id="review-input" placeholder="Write your review here...">${displayReview}</textarea>
+                    <div class="save-status" id="save-status"></div>
+                </div>
+            `;
         } else {
             // Public View (Read Only)
             if (isWatched) {
