@@ -4,7 +4,7 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 // Environment Check
-const isAdmin = window.location.pathname.includes('admin.html');
+const isAdmin = window.location.pathname.includes('admin');
 
 // State
 let watchedMovies = [];
