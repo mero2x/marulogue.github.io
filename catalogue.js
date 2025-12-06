@@ -653,7 +653,7 @@ window.toggleWatched = async function (id) {
         // Add Movie
         const item = searchResults.find(m => m.id === id);
         if (item) {
-            // Get any pending rating/review from the panel
+            // Get any pending rating/review/poster from the panel
             const pending = pendingEdits[id] || {};
 
             const newMovie = {
@@ -661,6 +661,7 @@ window.toggleWatched = async function (id) {
                 media_type: currentType,
                 rating: pending.rating || 0,
                 review: pending.review || '',
+                poster_path: pending.poster_path || item.poster_path,
                 dateWatched: new Date().toISOString()
             };
 
@@ -803,6 +804,23 @@ window.selectPoster = async function (id, posterPath) {
         } catch (e) {
             console.error('Poster save failed', e);
         }
+    } else {
+        // Movie not yet added - store in pending edits
+        if (!pendingEdits[id]) pendingEdits[id] = {};
+        pendingEdits[id].poster_path = posterPath;
+
+        // Update the main poster image
+        const currentPoster = document.getElementById('current-poster');
+        if (currentPoster) {
+            currentPoster.src = `${IMAGE_BASE_URL}${posterPath}`;
+        }
+
+        // Update selected state
+        document.querySelectorAll('.poster-option').forEach(img => {
+            img.classList.remove('selected');
+        });
+        const target = event.target;
+        if (target) target.classList.add('selected');
     }
 };
 
