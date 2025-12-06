@@ -645,8 +645,12 @@ function closePanel() {
 }
 
 // Global Handlers (Admin Only)
+let isTogglingWatched = false;
+
 window.toggleWatched = async function (id) {
-    if (!isAdmin) return;
+    if (!isAdmin || isTogglingWatched) return;
+
+    isTogglingWatched = true;
 
     const index = watchedMovies.findIndex(m => m.id === id);
     if (index === -1) {
@@ -679,11 +683,18 @@ window.toggleWatched = async function (id) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newMovie)
                 });
-                if (!response.ok) throw new Error('Failed to save to server');
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to save to server');
+                }
                 console.log('Movie added to server');
             } catch (e) {
                 console.error('Add failed:', e);
-                alert('Using local backup only. Server save failed.');
+                // Rollback optimistic update
+                const idx = watchedMovies.findIndex(m => m.id === id);
+                if (idx !== -1) watchedMovies.splice(idx, 1);
+                renderMovies();
+                alert(`Failed to add movie: ${e.message}`);
             }
         }
     } else {
@@ -705,9 +716,14 @@ window.toggleWatched = async function (id) {
             console.log('Movie deleted from server');
         } catch (e) {
             console.error('Delete failed:', e);
+            // Rollback
+            watchedMovies.splice(index, 0, { id: idToDelete });
+            renderMovies();
             alert('Server delete failed.');
         }
     }
+
+    isTogglingWatched = false;
 };
 
 window.rateMovie = async function (id, rating) {
