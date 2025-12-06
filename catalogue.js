@@ -416,22 +416,29 @@ async function handleSearch() {
             console.error('Error searching:', error);
         }
     } else {
-        // Public: Filter Local List
+        // Public: Search entire database via API
         if (!query) {
             currentTab = 'watched';
+            currentPage = 1;
+            await loadData(1, currentType);
             renderMovies();
             return;
         }
 
-        const lowerQuery = query.toLowerCase();
-        searchResults = watchedMovies.filter(m => {
-            const title = m.title || m.name || '';
-            return title.toLowerCase().includes(lowerQuery);
-        });
+        try {
+            const timestamp = new Date().getTime();
+            const response = await fetch(`/api/movies?type=${currentType}&search=${encodeURIComponent(query)}&_t=${timestamp}`);
+            const data = await response.json();
 
-        currentTab = 'search';
-        currentPage = 1;
-        renderMovies();
+            if (response.ok) {
+                searchResults = data.movies || [];
+                currentTab = 'search';
+                currentPage = 1;
+                renderMovies();
+            }
+        } catch (error) {
+            console.error('Search failed:', error);
+        }
     }
 }
 

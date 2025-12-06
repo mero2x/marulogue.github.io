@@ -20,11 +20,21 @@ module.exports = async (req, res) => {
         const limit = 30;
         const type = req.query.type || 'movie';
         const sort = req.query.sort || 'latest';
+        const searchQuery = req.query.search || '';
 
         const entry = await client.getEntry(process.env.CONTENTFUL_ENTRY_ID || 'movieList');
-        const allItems = entry.fields.contents || [];
+        let allItems = entry.fields.contents || [];
 
-        // Filter
+        // Search filter (if query provided)
+        if (searchQuery) {
+            const lowerQuery = searchQuery.toLowerCase();
+            allItems = allItems.filter(item => {
+                const title = (item.title || item.name || '').toLowerCase();
+                return title.includes(lowerQuery);
+            });
+        }
+
+        // Type filter
         const filtered = allItems.filter(item => {
             const itemType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
             return itemType === type;

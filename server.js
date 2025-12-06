@@ -252,6 +252,7 @@ app.get('/api/movies', async (req, res) => {
         const limit = 30;
         const type = req.query.type || 'movie';
         const sort = req.query.sort || 'latest';
+        const searchQuery = req.query.search || '';
 
         if (!accessToken) {
             console.warn('No Contentful Access Token provided.');
@@ -264,9 +265,18 @@ app.get('/api/movies', async (req, res) => {
 
         if (response.ok) {
             const data = await response.json();
-            const allItems = data.fields[fieldId] || [];
+            let allItems = data.fields[fieldId] || [];
 
-            // Filter
+            // Search filter (if query provided)
+            if (searchQuery) {
+                const lowerQuery = searchQuery.toLowerCase();
+                allItems = allItems.filter(item => {
+                    const title = (item.title || item.name || '').toLowerCase();
+                    return title.includes(lowerQuery);
+                });
+            }
+
+            // Type filter
             const filtered = allItems.filter(item => {
                 const itemType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
                 return itemType === type;
