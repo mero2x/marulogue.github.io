@@ -1831,3 +1831,56 @@ img {
 .list-item:nth-child(10) .bar {
     background-color: #3f51b5;
 }
+
+/* Floating Save Button */
+.save-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #00e676;
+    /* Bright Green */
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 24px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 230, 118, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateY(100px);
+    /* Hidden by default */
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+}
+
+.save-fab.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.save-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 230, 118, 0.6);
+}
+
+.save-fab:active {
+    transform: translateY(1px);
+}
+
+.save-fab.saving {
+    background: #ffa000;
+    /* Amber for processing */
+    box-shadow: 0 4px 15px rgba(255, 160, 0, 0.4);
+    cursor: wait;
+}
+
+.save-fab.success {
+    background: #00c853;
+    /* Darker Green for success */
+    pointer-events: none;
+}

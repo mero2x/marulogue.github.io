@@ -156,6 +156,54 @@ app.post('/api/update-movie', async (req, res) => {
     }
 });
 
+// API endpoint for BATCH updates (Safest)
+app.post('/api/batch-update', async (req, res) => {
+    try {
+        const { changes } = req.body;
+        console.log(`📝 Batch update request: ${changes?.length || 0} changes`);
+
+        if (!SPACE_ID || !ENTRY_ID || !FIELD_ID) {
+            return res.status(500).json({ success: false, message: 'Server config missing' });
+        }
+
+        const environment = await getEnvironment();
+        let entry = await environment.getEntry(ENTRY_ID);
+        let currentMovies = entry.fields[FIELD_ID]['en-US'] || [];
+
+        let added = 0, updated = 0, deleted = 0;
+
+        for (const change of changes) {
+            if (change.type === 'add') {
+                if (!currentMovies.some(m => m.id === change.data.id)) {
+                    currentMovies.push(change.data);
+                    added++;
+                }
+            } else if (change.type === 'delete') {
+                const initialLength = currentMovies.length;
+                currentMovies = currentMovies.filter(m => m.id !== change.id);
+                if (currentMovies.length < initialLength) deleted++;
+            } else if (change.type === 'update') {
+                const index = currentMovies.findIndex(m => m.id === change.id);
+                if (index !== -1) {
+                    currentMovies[index] = { ...currentMovies[index], ...change.updates };
+                    updated++;
+                }
+            }
+        }
+
+        entry.fields[FIELD_ID]['en-US'] = currentMovies;
+        entry = await entry.update();
+        await entry.publish();
+
+        console.log(`✅ Batch save success: +${added}, ~${updated}, -${deleted}`);
+        res.status(200).json({ success: true, stats: { added, updated, deleted } });
+
+    } catch (error) {
+        console.error('Batch update error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // API endpoint to DELETE a movie
 app.post('/api/delete-movie', async (req, res) => {
     try {
