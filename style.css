@@ -1884,3 +1884,21 @@ img {
     /* Darker Green for success */
     pointer-events: none;
 }
+
+/* Save Changes Button (Admin) */
+.save-btn {
+    background: #ff4444 !important;
+    color: white !important;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.save-btn:hover {
+    background: #ff6666 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.4);
+}
+
+.save-btn:active {
+    transform: translateY(0);
+}
