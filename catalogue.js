@@ -743,6 +743,65 @@ function closePanel() {
     currentMovieId = null;
 }
 
+// Global Handlers (Admin Only)
+let isTogglingWatched = false;
+
+window.toggleWatched = async function (id) {
+    if (!isAdmin || isTogglingWatched) return;
+
+    isTogglingWatched = true;
+
+    const index = watchedMovies.findIndex(m => m.id === id);
+
+    if (index === -1) {
+        // Add Movie
+        const item = searchResults.find(m => m.id === id);
+        if (item) {
+            // Get any pending rating/review/poster from the panel
+            const pending = pendingEdits[id] || {};
+
+            const newMovie = {
+                ...item,
+                media_type: currentType,
+                rating: pending.rating || 0,
+                review: pending.review || '',
+                poster_path: pending.poster_path || item.poster_path,
+                dateWatched: new Date().toISOString()
+            };
+
+            // Clear pending edits
+            delete pendingEdits[id];
+
+            // Optimistic update
+            watchedMovies.push(newMovie);
+            renderMovies();
+            if (currentMovieId === id) openMoviePanel(id);
+
+            // Queue Change
+            changeQueue.push({ type: 'add', data: newMovie });
+            updateSaveButton();
+            console.log('Queued add:', newMovie.title);
+        }
+    } else {
+        // Remove Movie
+        const idToDelete = watchedMovies[index].id;
+        const movieTitle = watchedMovies[index].title || watchedMovies[index].name;
+
+        // Optimistic update
+        watchedMovies.splice(index, 1);
+        renderMovies();
+        if (currentMovieId === id) openMoviePanel(id);
+
+        // Queue Change
+        changeQueue.push({ type: 'delete', id: idToDelete });
+        updateSaveButton();
+        console.log('Queued delete:', movieTitle);
+    }
+
+    // Small delay to prevent double-clicks
+    setTimeout(() => { isTogglingWatched = false; }, 300);
+};
+
 window.rateMovie = async function (id, rating) {
     if (!isAdmin) return;
     const index = watchedMovies.findIndex(m => m.id === id);
