@@ -77,8 +77,8 @@ let paginationMeta = {
 
 async function loadData(page = 1, type = 'movie') {
     try {
-        // Fetch from serverless API with pagination
-        const apiUrl = `/api/movies?page=${page}&type=${type}`;
+        // Fetch from serverless API with pagination and sorting
+        const apiUrl = `/api/movies?page=${page}&type=${type}&sort=${currentSort}`;
         const response = await fetch(apiUrl);
 
         if (response.ok) {
