@@ -698,12 +698,17 @@ window.toggleWatched = async function (id) {
                 console.warn('Could not fetch full details:', e);
             }
 
+            // Only save essential fields (no bloat)
             const newMovie = {
-                ...item,
+                id: item.id,
+                title: item.title,
+                name: item.name,
+                poster_path: item.poster_path,
+                release_date: item.release_date,
+                first_air_date: item.first_air_date,
                 media_type: currentType,
                 rating: 0,
                 review: '',
-                dateWatched: new Date().toISOString(),
                 director: currentType === 'movie' ? director : undefined,
                 creator: currentType === 'tv' ? creator : undefined,
                 production_countries: currentType === 'movie' ? production_countries : undefined,
